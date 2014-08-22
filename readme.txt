@@ -2,7 +2,7 @@
 Contributors: ThemeBoy, brianmiyaji
 Tags: ajax, dropdowns, option, posts, pages, custom post types, tabs, groups, redirect, inline
 Requires at least: 3.0
-Tested up to: 4.0
+Tested up to: 3.9
 Stable tag: 0.9
 License: GPLv2 or later
 
@@ -10,7 +10,21 @@ Display a group of posts that can be switched using dropdowns.
 
 == Description ==
 
-If you want to add content from multiple post types on one page with a dropdown to switch between them, this plugin is for you. Dropdowns are displayed on the frontend of your site and can query posts via Ajax, inline, or redirection.
+Add content from multiple post types on one page with a dropdown to switch between them. Dropdowns are displayed on the frontend of your site and can query posts via Ajax, inline, or redirection.
+
+= Features =
+* Create unlimited dropdowns
+* Display on any post or page using the included shortcode
+* Drag and drop posts to reorder them within a dropdown
+* Decrease page load by dynamically querying posts via Ajax
+* Use inline dropdowns to quickly switch between posts
+* Redirection method also available
+
+= Get Involved =
+
+Developers can contribute via the [Ajax Dropdowns GitHub Repository](https://github.com/ThemeBoy/ajax-dropdowns).
+
+Translators can contribute new languages to Ajax Dropdowns and our other WordPress plugins through [Transifex](https://www.transifex.com/projects/p/wp-plugins/).
 
 == Installation ==
 
