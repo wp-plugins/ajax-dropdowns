@@ -1,14 +1,14 @@
 <?php
 /**
  * @package Ajax_Dropdowns
- * @version 0.9
+ * @version 0.9.1
  */
 /*
 Plugin Name: Ajax Dropdowns
 Plugin URI: http://wordpress.org/plugins/ajax-dropdowns/
 Description: Display a group of posts that can be switched using dropdowns.
 Author: ThemeBoy
-Version: 0.9
+Version: 0.9.1
 Author URI: http://themeboy.com/
 */
 
@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /**
  * Plugin setup
  *
- * @since 0.9
+ * @since 0.9.1
 */
 class Ajax_Dropdowns {
 
@@ -51,7 +51,7 @@ class Ajax_Dropdowns {
 	*/
 	private function define_constants() {
 		if ( !defined( 'AJAX_DROPDOWNS_VERSION' ) )
-			define( 'AJAX_DROPDOWNS_VERSION', '0.9' );
+			define( 'AJAX_DROPDOWNS_VERSION', '0.9.1' );
 
 		if ( !defined( 'AJAX_DROPDOWNS_URL' ) )
 			define( 'AJAX_DROPDOWNS_URL', plugin_dir_url( __FILE__ ) );
@@ -192,13 +192,13 @@ class Ajax_Dropdowns {
 				foreach ( $post_types as $post_type ):
 					if ( 'attachment' == $post_type ) continue;
 					$object = get_post_type_object( $post_type );
-					$posts = get_posts( array( 'post_type' => $post_type ) );
-					if ( $posts ):
+					$posts = get_posts( array( 'post_type' => $post_type, 'posts_per_page' => -1 ) );
+					if ( $posts && is_array( $posts ) ):
 						?>
-						<optgroup label="<?php echo $object->labels->name; ?>">
+						<optgroup label="<?php echo $object->labels->name; ?> (<?php echo sizeof( $posts ); ?>)">
 							<?php
 							foreach ( $posts as $post ):
-								printf( '<option value="%s" data-post-type="%s" %s>%s</option>', $post->ID, $object->labels->singular_name, in_array( $post->ID, $selected ) ? 'selected' : '', $post->post_title );
+								printf( '<option value="%s" data-post-type="%s">%s</option>', $post->ID, $object->labels->singular_name, $post->post_title );
 							endforeach;
 							?>
 						</optgroup>
