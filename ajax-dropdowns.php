@@ -1,14 +1,14 @@
 <?php
 /**
  * @package Ajax_Dropdowns
- * @version 0.9.1
+ * @version 0.9.3
  */
 /*
 Plugin Name: Ajax Dropdowns
 Plugin URI: http://wordpress.org/plugins/ajax-dropdowns/
 Description: Display a group of posts that can be switched using dropdowns.
 Author: ThemeBoy
-Version: 0.9.1
+Version: 0.9.3
 Author URI: http://themeboy.com/
 */
 
@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /**
  * Plugin setup
  *
- * @since 0.9.1
+ * @since 0.9.3
 */
 class Ajax_Dropdowns {
 
@@ -51,7 +51,7 @@ class Ajax_Dropdowns {
 	*/
 	private function define_constants() {
 		if ( !defined( 'AJAX_DROPDOWNS_VERSION' ) )
-			define( 'AJAX_DROPDOWNS_VERSION', '0.9.1' );
+			define( 'AJAX_DROPDOWNS_VERSION', '0.9.3' );
 
 		if ( !defined( 'AJAX_DROPDOWNS_URL' ) )
 			define( 'AJAX_DROPDOWNS_URL', plugin_dir_url( __FILE__ ) );
@@ -192,7 +192,7 @@ class Ajax_Dropdowns {
 				foreach ( $post_types as $post_type ):
 					if ( 'attachment' == $post_type ) continue;
 					$object = get_post_type_object( $post_type );
-					$posts = get_posts( array( 'post_type' => $post_type, 'posts_per_page' => -1 ) );
+					$posts = get_posts( array( 'post_type' => $post_type, 'posts_per_page' => -1, 'orderby' => 'title', 'order' => 'ASC' ) );
 					if ( $posts && is_array( $posts ) ):
 						?>
 						<optgroup label="<?php echo $object->labels->name; ?> (<?php echo sizeof( $posts ); ?>)">
@@ -263,7 +263,7 @@ class Ajax_Dropdowns {
 	public static function method_meta_box( $post, $args ) {
 		wp_nonce_field( 'ajaxd_save_data', 'ajaxd_meta_nonce' );
 		$method = get_post_meta( $post->ID, 'ajaxd_method', true );
-		$method_options = array( 'ajax' => __( 'Ajax', 'ajaxd' ), 'inline' => __( 'Inline', 'ajaxd' ), 'redirect' => __( 'Redirect', 'ajaxd' ) );
+		$method_options = array( 'ajax' => __( 'Ajax', 'ajaxd' ), 'inline' => __( 'Inline', 'ajaxd' ), 'parameter' => __( 'URL Parameter', 'ajaxd' ), 'redirect' => __( 'Redirect', 'ajaxd' ) );
 		?>
 		<p class="howto">
 			<?php _e( 'Select the method to query posts.', 'ajaxd' ); ?>
@@ -350,7 +350,7 @@ class Ajax_Dropdowns {
 		 */
 		$select = '<select class="ajaxd-select" name="ajax_post" id="ajaxd-select-' . $id . '">';
 		foreach ( $include as $post_id ): if ( get_post_status( $post_id ) == 'publish' ||  current_user_can( 'edit_post', $post_id ) ):
-			$select .= '<option value="' . $post_id . '"' . selected( $current, $post_id, false ) . '>' . get_the_title( $post_id ) . '</option>';
+			$select .= '<option value="' . $post_id . '" data-permalink="' . get_permalink( $post_id ) . '" ' . selected( $current, $post_id, false ) . '>' . get_the_title( $post_id ) . '</option>';
 		endif; endforeach;
 		$select .= '</select>';
 		
@@ -359,8 +359,10 @@ class Ajax_Dropdowns {
 		 */
 		if ( 'inline' == $method ):
 			$script = '$("#ajaxd-select-' . $id . '").change(function(){$("#ajaxd-posts-' . $id . ' #ajaxd-post-"+$(this).val()).show().siblings().hide();});';
-		elseif ( 'redirect' == $method ):
+		elseif ( 'parameter' == $method ):
 			$script = '$("#ajaxd-select-' . $id . '").change(function(){window.location="' . add_query_arg( 'ajax_post', '', remove_query_arg( 'ajax_post', get_permalink() ) ) . '="+$(this).val();});';
+		elseif ( 'redirect' == $method ):
+			$script = '$("#ajaxd-select-' . $id . '").change(function(){window.location=$(this).find("option:selected").data("permalink");});';
 		else:
 			$script = '$("#ajaxd-select-' . $id . '").change(function(){$.post("' . admin_url('admin-ajax.php') . '",{"action":"ajax_dropdown","post_id":$(this).val()},function(response){if(response!=0){$("#ajaxd-posts-' . $id . '").html(response)};});});';
 		endif;
