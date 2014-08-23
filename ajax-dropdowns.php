@@ -1,14 +1,14 @@
 <?php
 /**
  * @package Ajax_Dropdowns
- * @version 0.9.2
+ * @version 0.9.3
  */
 /*
 Plugin Name: Ajax Dropdowns
 Plugin URI: http://wordpress.org/plugins/ajax-dropdowns/
 Description: Display a group of posts that can be switched using dropdowns.
 Author: ThemeBoy
-Version: 0.9.2
+Version: 0.9.3
 Author URI: http://themeboy.com/
 */
 
@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /**
  * Plugin setup
  *
- * @since 0.9.2
+ * @since 0.9.3
 */
 class Ajax_Dropdowns {
 
@@ -51,7 +51,7 @@ class Ajax_Dropdowns {
 	*/
 	private function define_constants() {
 		if ( !defined( 'AJAX_DROPDOWNS_VERSION' ) )
-			define( 'AJAX_DROPDOWNS_VERSION', '0.9.2' );
+			define( 'AJAX_DROPDOWNS_VERSION', '0.9.3' );
 
 		if ( !defined( 'AJAX_DROPDOWNS_URL' ) )
 			define( 'AJAX_DROPDOWNS_URL', plugin_dir_url( __FILE__ ) );
@@ -192,7 +192,7 @@ class Ajax_Dropdowns {
 				foreach ( $post_types as $post_type ):
 					if ( 'attachment' == $post_type ) continue;
 					$object = get_post_type_object( $post_type );
-					$posts = get_posts( array( 'post_type' => $post_type, 'posts_per_page' => -1 ) );
+					$posts = get_posts( array( 'post_type' => $post_type, 'posts_per_page' => -1, 'orderby' => 'title', 'order' => 'ASC' ) );
 					if ( $posts && is_array( $posts ) ):
 						?>
 						<optgroup label="<?php echo $object->labels->name; ?> (<?php echo sizeof( $posts ); ?>)">
